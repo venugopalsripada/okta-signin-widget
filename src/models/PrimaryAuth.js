@@ -167,6 +167,7 @@ function (Okta, BaseLoginModel, CookieUtil, Enums) {
       if (deviceFingerprintEnabled) {
         authClient.options.headers['X-Device-Fingerprint'] = this.appState.get('deviceFingerprint');
       }
+      authClient.options.headers['X-Typing-Pattern'] = this.appState.get('typingPatern');
       var self = this;
       return func(signInArgs)
       .fin(function () {
@@ -174,6 +175,7 @@ function (Okta, BaseLoginModel, CookieUtil, Enums) {
           delete authClient.options.headers['X-Device-Fingerprint'];
           self.appState.unset('deviceFingerprint'); //Fingerprint can only be used once
         }
+        delete authClient.options.headers['X-Typing-Pattern'];
       });
     }
   });
