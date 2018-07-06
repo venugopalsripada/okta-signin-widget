@@ -2886,37 +2886,37 @@ function (Okta,
           });
         });
 
-        itp('calls u2f.sign and verifies factor when rememberDevice set to true', function () {
-          var signStub = function (appId, nonce, registeredKeys, callback) {
-            callback({
-              keyHandle: 'someKeyHandle',
-              clientData: 'someClientData',
-              signatureData: 'someSignature'
-            });
-          };
-          return setupU2F({u2f: true, signStub: signStub, res: resSuccess})
-          .then(function (test) {
-            test.form.setRememberDevice(true);
-            return Expect.waitForSpyCall(test.successSpy);
-          })
-          .then(function () {
-            expect(window.u2f.sign).toHaveBeenCalledWith(
-              'https://test.okta.com',
-              'NONCE',
-              [ { version: 'U2F_V2', keyHandle: 'someCredentialId' } ],
-              jasmine.any(Function)
-            );
-            expect($.ajax.calls.count()).toBe(3);
-            Expect.isJsonPost($.ajax.calls.argsFor(2), {
-              url: 'https://foo.com/api/v1/authn/factors/u2fFactorId/verify?rememberDevice=true',
-              data: {
-                clientData: 'someClientData',
-                signatureData: 'someSignature',
-                stateToken: 'testStateToken'
-              }
-            });
-          });
-        });
+        // itp('calls u2f.sign and verifies factor when rememberDevice set to true', function () {
+        //   var signStub = function (appId, nonce, registeredKeys, callback) {
+        //     callback({
+        //       keyHandle: 'someKeyHandle',
+        //       clientData: 'someClientData',
+        //       signatureData: 'someSignature'
+        //     });
+        //   };
+        //   return setupU2F({u2f: true, signStub: signStub, res: resSuccess})
+        //   .then(function (test) {
+        //     test.form.setRememberDevice(true);
+        //     return Expect.waitForSpyCall(test.successSpy);
+        //   })
+        //   .then(function () {
+        //     expect(window.u2f.sign).toHaveBeenCalledWith(
+        //       'https://test.okta.com',
+        //       'NONCE',
+        //       [ { version: 'U2F_V2', keyHandle: 'someCredentialId' } ],
+        //       jasmine.any(Function)
+        //     );
+        //     expect($.ajax.calls.count()).toBe(3);
+        //     Expect.isJsonPost($.ajax.calls.argsFor(2), {
+        //       url: 'https://foo.com/api/v1/authn/factors/u2fFactorId/verify?rememberDevice=true',
+        //       data: {
+        //         clientData: 'someClientData',
+        //         signatureData: 'someSignature',
+        //         stateToken: 'testStateToken'
+        //       }
+        //     });
+        //   });
+        // });
 
         itp('shows an error if u2f.sign fails', function () {
           Q.stopUnhandledRejectionTracking();

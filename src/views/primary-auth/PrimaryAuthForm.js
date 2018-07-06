@@ -44,7 +44,7 @@ define([
     initialize: function () {
       var trackTypingPattern = this.settings.get('features.trackTypingPattern');
       if (trackTypingPattern) {
-        tdna = new TypingDNA();  
+        var tdna = new TypingDNA();  
       }
       this.listenTo(this, 'save', function () {
         if (trackTypingPattern) {

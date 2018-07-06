@@ -106,6 +106,8 @@ function (Okta, BaseLoginModel, CookieUtil, Enums) {
       var signInArgs = this.getSignInArgs(username);
 
       var primaryAuthPromise;
+      //var trackTypingPattern = this.settings.get('features.trackTypingPattern');
+
       if (this.appState.get('isUnauthenticated') && !this.settings.get('features.passwordlessAuth')) {
         primaryAuthPromise = this.doTransaction(function (transaction) {
           var authClient = this.appState.settings.authClient;
@@ -166,8 +168,6 @@ function (Okta, BaseLoginModel, CookieUtil, Enums) {
       // Since we only need to send it for primary auth
       if (deviceFingerprintEnabled) {
         authClient.options.headers['X-Device-Fingerprint'] = this.appState.get('deviceFingerprint');
-      }
-      if (this.settings.get('features.trackTypingPattern')) {
         authClient.options.headers['X-Typing-Pattern'] = this.appState.get('typingPatern');
       }
       var self = this;
@@ -176,8 +176,6 @@ function (Okta, BaseLoginModel, CookieUtil, Enums) {
         if (deviceFingerprintEnabled) {
           delete authClient.options.headers['X-Device-Fingerprint'];
           self.appState.unset('deviceFingerprint'); //Fingerprint can only be used once
-        }
-        if (this.settings.get('features.trackTypingPattern')) {
           delete authClient.options.headers['X-Typing-Pattern'];
         }
       });
