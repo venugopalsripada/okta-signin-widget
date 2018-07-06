@@ -42,13 +42,18 @@ define([
     },
 
     initialize: function () {
-      tdna = new TypingDNA();
+      var trackTypingPattern = this.settings.get('features.trackTypingPattern');
+      if (trackTypingPattern) {
+        tdna = new TypingDNA();  
+      }
       this.listenTo(this, 'save', function () {
-        TypingDNA.stop();
-        var typingPattern = tdna.getTypingPattern({
-          type: 1
-        });
-        this.options.appState.set('typingPatern', typingPattern);
+        if (trackTypingPattern) {
+          TypingDNA.stop();
+          var typingPattern = tdna.getTypingPattern({
+            type: 1
+          });
+          this.options.appState.set('typingPatern', typingPattern);
+        }
         var self = this;
         var creds = {
           username: this.model.get('username')
@@ -177,11 +182,10 @@ define([
     },
 
     postRender: function() {
-      // Dont record and autopolated
-      //if (!this.model.get('username')) {
-      TypingDNA.addTarget('okta-signin-username');
-      TypingDNA.start();
-      //}
+      if (this.settings.get('features.trackTypingPattern')) {
+        TypingDNA.addTarget('okta-signin-username');
+        TypingDNA.start();
+      }
     }
   });
 
