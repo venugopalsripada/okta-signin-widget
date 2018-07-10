@@ -2,8 +2,9 @@
 
 var OktaSignIn = (function () {
 
-  var config  = require('json!config/config'),
-      _ = require('okta/underscore');
+  var _        = require('okta/underscore'),
+      config   = require('json!config/config'),
+      handlers = require('../util/Handlers');
 
   function getProperties(authClient, LoginRouter, Util, config) {
 
@@ -140,9 +141,12 @@ var OktaSignIn = (function () {
      * @param error - error callback function (usually the same as passed to render)
      */
     function parseTokensFromUrl(success, error) {
-      authClient.token.parseFromUrl()
-      .then(success)
-      .fail(error);
+      var successHandler = success || handlers.defaultSuccessTokenHandler(authClient.tokenManager);
+      var errorHandler = error || handlers.defaultErrorHandler();
+
+      return authClient.token.parseFromUrl()
+      .then(successHandler)
+      .fail(errorHandler);
     }
 
     // Properties exposed on OktaSignIn object.

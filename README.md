@@ -409,8 +409,9 @@ else {
 
 Parses the access or ID Tokens from the url after a successful authentication redirect. This is used when `authParams.display = 'page'`.
 
-- `success` - Function that is called after the tokens have been parsed and validated
-- `error` - Function that is called if an error occurs while trying to parse or validate the tokens
+- `success` *(optional)*- Function called after the tokens have been parsed and validated. If omitted, a default handler stores the tokens, where they can be returned via the [tokenManager.get](#oidc-tokenmanagergetkey) method under the keys `accessToken` and/or `idToken`.
+- `error` *(optional)* - Function called if an error occurs while trying to parse or validate the tokens. If omitted, errors are output to the console.
+
 
 ```javascript
 var signIn = new OktaSignIn({
@@ -957,7 +958,7 @@ Optional configuration:
      // The callback function is passed 3 arguments: response, onSuccess, onFailure
      // 1) response: response returned from the API post registration.
      // 2) onSuccess: success callback.
-     // 3) onFailure: failure callback. Note: accepts an errorObject that can be used to show form level 
+     // 3) onFailure: failure callback. Note: accepts an errorObject that can be used to show form level
      //    or field level errors.
     postSubmit: function (response, onSuccess, onFailure) {
       // In this example postSubmit callback is used to log the server response to the browser console before completing registration flow
