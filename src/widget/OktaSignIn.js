@@ -155,9 +155,23 @@ var OktaSignIn = (function () {
       .fail(handlers.defaultErrorHandler());
     }
 
+    /**
+     * Renders the Widget given a set options
+     * @param options - options for the signin widget (OAuth focus).
+     *        Must have an el property to render the widget to.
+     * @param success - success callback function
+     * @param error - error callback function
+     */
+    function showSignInToGetTokens(options, success, error) {
+      var renderOptions = handlers.filterOAuthParams(options, config);
+
+      return render(renderOptions, success, error);
+    }
+
     // Properties exposed on OktaSignIn object.
     return {
       renderEl: render,
+      showSignInToGetTokens: showSignInToGetTokens,
       signOut: closeSession,
       idToken: {
         refresh: refreshIdToken
