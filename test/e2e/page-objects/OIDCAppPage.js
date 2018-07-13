@@ -44,9 +44,14 @@ class AppPage {
     browser.executeScript('parseTokens()');
   }
 
-  callParseTokensWithDefaultHandlers() {
+  callParseAndStoreTokens() {
     browser.wait(EC.presenceOf(this.pageEl));
-    browser.executeScript('parseTokensWithDefaultHandlers()');
+    browser.executeScript('parseAndStoreTokens()');
+  }
+
+  callParseAndStoreTokensGivenKeys(keys) {
+    browser.wait(EC.presenceOf(this.pageEl));
+    browser.executeScript(`parseAndStoreTokensGivenKeys(${JSON.stringify(keys)})`);
   }
 
   changeRedirectUriState(state) {

@@ -32,6 +32,7 @@ Contributors should read our [contributing guidelines](./CONTRIBUTING.md) if the
   * [session.close](#sessionclosecallback)
   * [token.hasTokensInUrl](#oidc-tokenhastokensinurl)
   * [token.parseTokensFromUrl](#oidc-tokenparsetokensfromurlsuccess-error)
+  * [token.parseAndStoreTokensFromUrl](#oidc-tparseAndStoreTokensFromUrl-tokenStorageKeys)
   * [tokenManager.add](#oidc-tokenmanageraddkey-token)
   * [tokenManager.get](#oidc-tokenmanagergetkey)
   * [tokenManager.remove](#oidc-tokenmanagerremovekey)
@@ -409,8 +410,8 @@ else {
 
 Parses the access or ID Tokens from the url after a successful authentication redirect. This is used when `authParams.display = 'page'`.
 
-- `success` *(optional)*- Function called after the tokens have been parsed and validated. If omitted, a default handler stores the tokens, where they can be returned via the [tokenManager.get](#oidc-tokenmanagergetkey) method under the keys `accessToken` and/or `idToken`.
-- `error` *(optional)* - Function called if an error occurs while trying to parse or validate the tokens. If omitted, errors are output to the console.
+- `success` - Function called after the tokens have been parsed and validated
+- `error` - Function called if an error occurs while trying to parse or validate the tokens
 
 
 ```javascript
@@ -448,6 +449,48 @@ else {
       // handleError(err);
     }
   );
+}
+```
+
+## `OIDC` token.parseAndStoreTokensFromUrl(tokenStorageKeys)
+
+Parse and **store** the access or ID Tokens from the url after a successful authentication redirect. This is used when `authParams.display = 'page'`.
+
+* `tokenStorageKeys` - Override the default storage naming conventions for the access and/or ID tokens. Defaults to `accessToken` and `idToken`.
+
+```javascript
+var signIn = new OktaSignIn({
+  baseUrl: 'https://{yourOktaDomain}',
+  clientId: '{{myClientId}}',
+  redirectUri: '{{redirectUri configured in OIDC app}}',
+  authParams: {
+    responseType: 'id_token',
+    // `display: page` will initiate the OAuth2 page redirect flow
+    display: 'page'
+  }
+});
+
+// The user has just landed on our login form, and has not yet authenticated
+// with a Social Auth IDP.
+if (!signIn.token.hasTokensInUrl()) {
+  signIn.renderEl({el: '#osw-container'});
+}
+
+// The user has redirected back after authenticating and has their access or
+// ID Token in the URL.
+else {
+  signIn.token.parseAndStoreTokensFromUrl()
+  .then(function() {
+    const idToken = signIn.tokenManager.get('idToken');
+    console.log(idToken);
+  });
+
+  // Optionally - use a different key for the idToken
+  signIn.token.parseAndStoreTokensFromUrl({ idToken: 'id-token-key' })
+  .then(function() {
+    const idToken = signIn.tokenManager.get('id-token-key');
+    console.log(idToken);
+  });
 }
 ```
 

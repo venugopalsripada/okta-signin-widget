@@ -35,11 +35,21 @@ function parseTokens() {
   }
 }
 
-function parseTokensWithDefaultHandlers() {
+function parseAndStoreTokens() {
   if (oktaSignIn.token.hasTokensInUrl()) {
-    oktaSignIn.token.parseTokensFromUrl()
+    oktaSignIn.token.parseAndStoreTokensFromUrl()
     .then(function() {
       var idToken = oktaSignIn.tokenManager.get('idToken');
+      addMessageToPage('idtoken_user', idToken.claims.name);
+    });
+  }
+}
+
+function parseAndStoreTokensGivenKeys(keys) {
+  if (oktaSignIn.token.hasTokensInUrl()) {
+    oktaSignIn.token.parseAndStoreTokensFromUrl(keys)
+    .then(function() {
+      var idToken = oktaSignIn.tokenManager.get(keys.idToken);
       addMessageToPage('idtoken_user', idToken.claims.name);
     });
   }
