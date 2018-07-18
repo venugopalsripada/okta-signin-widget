@@ -32,7 +32,7 @@ Contributors should read our [contributing guidelines](./CONTRIBUTING.md) if the
   * [session.close](#sessionclosecallback)
   * [token.hasTokensInUrl](#oidc-tokenhastokensinurl)
   * [token.parseTokensFromUrl](#oidc-tokenparsetokensfromurlsuccess-error)
-  * [token.parseAndStoreTokensFromUrl](#oidc-tparseAndStoreTokensFromUrl-tokenStorageKeys)
+  * [token.parseAndStoreTokensFromUrl](#oidc-tokenparseandstoretokensfromurltokenstoragekeys)
   * [tokenManager.add](#oidc-tokenmanageraddkey-token)
   * [tokenManager.get](#oidc-tokenmanagergetkey)
   * [tokenManager.remove](#oidc-tokenmanagerremovekey)
