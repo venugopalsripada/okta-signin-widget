@@ -68,21 +68,25 @@ define(['okta', 'vendor/lib/q', 'views/shared/TextBox'], function (Okta, Q, Text
       return this.model.appState.get('isMfaChallenge') && this.model.get('answer');
     },
 
-    initialize: function () {
+    initialize : function () {
       var form = this;
       this.title = this.model.get('factorLabel');
 
       var factorType = this.model.get('factorType');
       var formAndButtonDetails = getFormAndButtonDetails.call(this, factorType);
       this.$el.attr('data-se', 'factor-' + factorType);
-
+      
       this.subtitle = formAndButtonDetails.subtitle;
       this.listenTo(this.model, 'error', function () {
-        this.clearErrors();
+        this.clearErrors(); 
+        form.getInputs().first().focus();
       });
+    
       this.add(Okta.createButton({
         attributes: { 'data-se': formAndButtonDetails.buttonDataSe },
         className: 'button ' + formAndButtonDetails.buttonClassName,
+        name: 'factorLink',
+        id: 'factorlink',
         title: formAndButtonDetails.formSubmit,
         click: function () {
           form.clearErrors();
@@ -96,6 +100,7 @@ define(['okta', 'vendor/lib/q', 'views/shared/TextBox'], function (Okta, Q, Text
           .then(function () {
             // render and focus on the passcode input field.
             form.getInputs().first().render().focus();
+           
             return Q.delay(API_RATE_LIMIT);
           })
           .then(_.bind(function () {
@@ -114,6 +119,7 @@ define(['okta', 'vendor/lib/q', 'views/shared/TextBox'], function (Okta, Q, Text
         input: TextBox,
         type: 'tel'
       });
+      
       if (this.options.appState.get('allowRememberDevice')) {
         this.addInput({
           label: false,
@@ -124,8 +130,14 @@ define(['okta', 'vendor/lib/q', 'views/shared/TextBox'], function (Okta, Q, Text
           type: 'checkbox'
         });
       }
+      
+    },
+    focus: function () {
+      _.defer(_.bind(function () {
+        var linkFactorType = this.$el.find('#factorlink');
+        linkFactorType[0].focus();
+      }, this));
     }
-
   });
 
 });

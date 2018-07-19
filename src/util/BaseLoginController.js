@@ -44,6 +44,7 @@ define(['okta', 'vendor/lib/q'], function (Okta, Q) {
 
       this.listenTo(this.model, 'error', function () {
         this.toggleButtonState(false);
+        this.resetFocus();
       });
 
       this.addModelListeners(this.model);
@@ -96,12 +97,15 @@ define(['okta', 'vendor/lib/q'], function (Okta, Q) {
       var button = this.$el.find('.button');
       button.toggleClass('link-button-disabled', state).prop('disabled', state);
     },
-
+    resetFocus: function () {
+      var usernameInput = this.$el.find('#okta-signin-username');
+      usernameInput.focus().select();
+    },
 
     postRenderAnimation: function() {
       // Event triggered after a page is rendered along with the classname to identify the page
       this.trigger('pageRendered', {page: this.className});
     }
   });
-
+  
 });
